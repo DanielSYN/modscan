@@ -1,0 +1,9 @@
+{
+  "_about": "Indicators from public incident reports. Extend with entries from feeds you trust, and keep each entry's source in its description.",
+  "sha256": {},
+  "ips": {
+    "85.217.144.130": "fractureiser stage 0 download server (Minecraft mod malware, June 2023)",
+    "107.189.3.101": "fractureiser command-and-control server (Minecraft mod malware, June 2023)"
+  },
+  "domains": {}
+}

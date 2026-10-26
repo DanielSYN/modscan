@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ModScan · Check a mod before you run it</title>
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="logo" href="/">
+        <img src="/static/icon.svg" alt="" width="28" height="28">
+        ModScan
+      </a>
+      <span class="tagline">Static malware scanner for Minecraft mods and .jar files</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="upload-view">
+      <h1>Check a mod before you run it</h1>
+      <p class="lead">ModScan looks inside a <code>.jar</code> file and tells you what its code could do: steal passwords,
+        install itself at startup, download more malware, or hide what it's doing.</p>
+
+      <label id="dropzone" class="dropzone" for="file-input">
+        <input id="file-input" type="file" accept=".jar,.class,.zip" class="visually-hidden">
+        <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 0-4 4m4-4 4 4M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <span class="drop-title">Drop a .jar file here</span>
+        <span class="drop-sub">or click to choose one · up to 64 MB</span>
+      </label>
+      <p id="upload-status" class="status" role="status" hidden></p>
+
+      <ul class="promises">
+        <li><strong>Never run.</strong> The file is only read, never executed.</li>
+        <li><strong>Not kept.</strong> It's analysed in memory and discarded when the scan finishes.</li>
+        <li><strong>Explained.</strong> Every finding shows the exact evidence that triggered it.</li>
+      </ul>
+    </section>
+
+    <section id="report-view" hidden>
+      <div class="report-actions">
+        <button id="scan-another" class="btn" type="button">← Scan another file</button>
+        <button id="download-json" class="btn ghost" type="button">Download report (JSON)</button>
+      </div>
+
+      <div id="verdict" class="verdict">
+        <div class="verdict-main">
+          <div id="verdict-label" class="verdict-label"></div>
+          <p id="verdict-advice" class="verdict-advice"></p>
+        </div>
+        <div class="score">
+          <div class="score-number"><span id="score-value"></span><span class="score-max">/100</span></div>
+          <div class="score-caption">risk score</div>
+          <div class="meter"><span id="score-bar"></span></div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h2>File</h2>
+          <dl id="file-details" class="details"></dl>
+          <a id="virustotal" class="small-link" target="_blank" rel="noopener noreferrer">Look up this hash on VirusTotal ↗</a>
+          <p class="hint">Only the hash is looked up. Your file isn't uploaded anywhere.</p>
+        </div>
+        <div class="card" id="mod-card" hidden>
+          <h2>What it says it is</h2>
+          <dl id="mod-details" class="details"></dl>
+          <p class="hint">Taken from the file's own metadata, which malware can fake.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Findings</h2>
+        <div id="findings"></div>
+      </div>
+
+      <div class="card" id="addresses-card" hidden>
+        <h2>Addresses found in the file</h2>
+        <p class="hint">Shown as plain text on purpose. Don't visit them.</p>
+        <ul id="addresses" class="addresses"></ul>
+      </div>
+
+      <div class="card" id="notes-card" hidden>
+        <h2>Scan notes</h2>
+        <ul id="notes" class="notes"></ul>
+      </div>
+
+      <div class="card ai-card">
+        <h2>Explain it in plain English <span class="badge">Claude</span></h2>
+        <p class="muted">Get a short explanation of these findings and what to do next, written by Claude. It uses
+          <strong>your own Anthropic API key</strong>: the key goes with this one request to be passed to Anthropic, then it's
+          forgotten. It's never stored or logged. Only the findings are sent, never your file.</p>
+        <form id="ai-form" class="ai-form">
+          <label for="api-key">Anthropic API key</label>
+          <div class="key-row">
+            <input id="api-key" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-…" required>
+            <button id="ai-button" class="btn primary" type="submit">Explain</button>
+          </div>
+          <label class="checkbox"><input id="remember-key" type="checkbox"> Remember it in this browser tab until I close it</label>
+          <p class="hint">No key? Create one at <a href="https://platform.claude.com/" target="_blank" rel="noopener noreferrer">platform.claude.com</a>. Each explanation costs about a cent or two.</p>
+        </form>
+        <p id="ai-status" class="status" role="status" hidden></p>
+        <div id="ai-result" class="ai-result" hidden>
+          <p class="ai-label">AI-generated explanation. The verdict above comes from the scanner's rules, not from AI.</p>
+          <div id="ai-text"></div>
+        </div>
+      </div>
+
+      <p class="disclaimer">Static analysis shows what code <em>could</em> do, not what it did. No scanner can prove a file is
+        safe, so only download mods from sources you trust.</p>
+    </section>
+  </main>
+
+  <footer class="wrap footer">ModScan reads files; it never runs them.</footer>
+  <script src="/static/app.js"></script>
+</body>
+</html>

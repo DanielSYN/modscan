@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "modscan"
+version = "0.1.0"
+description = "Static malware scanner for Minecraft mods and other .jar files"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=2.3,<3",
+    "fastapi>=0.162,<1",
+    "uvicorn[standard]>=0.54",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=9", "httpx>=0.28"]
+
+[project.scripts]
+modscan = "modscan.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["modscan*"]
+
+[tool.setuptools.package-data]
+modscan = ["data/*.json", "web/static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
